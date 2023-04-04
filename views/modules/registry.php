@@ -9,16 +9,15 @@
     a, a:hover {
         color:<?=$color?>;
     }
-
 </style>
 
-<div class="body_login">
+
+<div id="body_login">
     <div class="login-box">
         <div class="card">
-            <div class="card-body login-card-body ">
+            <div class="card-body login-card-body">
                 <div class="login-title text-center m-4"> Registro </div>
                 <form id="formRegistry" method="post" autocomplete="off">
-                    <?php $registry = new ControllerUsers(); $registry -> registry(); ?>
                     <div class="input-icon m-2">
                         <input class="form-control reg" type="text" name="name" placeholder="Nombres" autofocus />
                         <i class="fas thin fa-user-alt" data-bs-toggle="tooltip" data-bs-placement="left" title="Nombres" ></i>
@@ -62,11 +61,14 @@
                     <div class="h7 ms-auto">¿Tiene una cuenta registrada? | <a href="<?=$url?>"><b>Ingresar</b></a> </div>
                 </div>
             </div>
-
         </div>
+
     </div>
 </div>
 
+<div class="pt-5 mt-5">
+    <?php $registry = new ControllerUsers(); $registry -> registry(); ?>
+</div>
 <!-- modals-->
 <div class="modal fade" id="modalPolitics">
     <div class="modal-dialog modal-fullscreen">

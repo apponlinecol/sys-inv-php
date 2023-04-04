@@ -231,5 +231,13 @@ class ControllerAction
         }
     }
 
+    static public function emails_sending()
+    {
+        if( isset( $_POST['emails_sending'] ) ){
+            ControllerGeneral::ctrEmailsSending( $_POST['emails_sending'], $_POST['idr'] );
+        }
+
+    }
+
 
 }

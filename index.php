@@ -8,5 +8,7 @@ require_once 'controllers/users.controller.php';
 require_once 'models/general.model.php';
 require_once 'models/routes.php';
 
+require_once 'assets/vendor/autoload.php';
+
 $template = new ControllerTemplate();
 $template -> ctrTemplate();

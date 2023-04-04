@@ -1,4 +1,6 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class ControllerGeneral
 {
@@ -50,6 +52,75 @@ class ControllerGeneral
         $response = ModelGeneral::mdlRemoveRow( $table, $idr );
         return $response;
     }
+
+    static public function ctrEmailsSending( $ide, $idr, $code )
+    {
+        $url = routes::ctrRout();
+        $template = ModelGeneral::mdlRecord('single','template','where id=1');
+        $emails_sending =  ModelGeneral::mdlRecord('single','emails_sending','where id='.$ide );
+        $user = ModelGeneral::mdlRecord('single','users','where id="'.$idr.'"');
+
+        if( $user == false ){ $mail = 'nimajho@outlook.com'; $name='Jhonny'; }
+        else{ $mail = $user['mail']; $name = ucfirst($user['name']); }
+
+        $html = '
+        <div style="width:100%; background:#fff; position:relative; font-family:sans-serif; padding-bottom:20px" >
+            <center>
+                <img style="padding-top:25px; width:10%" src="'.$url.'sys-inv-php/assets/img/template/logo.png">
+                <h4>Bienvenido '.$name.' a AppOnlinecol ¡¡¡</h4>
+            </center>
+            <div style="position:relative; margin:auto; width:600px; background:white; padding:20px; border:solid 1px #ff5a01;">
+                <center>
+                    <img style="padding:20px; width:15%" src="'.$url.'sys-inv-php/assets/img/template/activate.png">
+                    <h3 style="font-weight:100; color:#424242">'.strtoupper($emails_sending['title']).'</h3>
+                    <hr style="border:1px solid #ccc; width: 8px;0%">
+                    <h4 style="font-weight:100; color:#424242; padding:0 20px">'.$emails_sending['message'].'</h4>
+                    <h2 style="color: #ff5a01">'.$code.'</h2>
+                    <a href="'.$url.$emails_sending['link'].$user['mail_encrypt'].'" target="_blank" style="text-decoration:none">
+                        <div style="line-height:30px; background:#ff5a01; width:30%; color:white; border-radius: 5px">'.$emails_sending['button'].'</div>
+                    </a>
+                    <br>
+                    <h4 style="font-weight:100; color:#424242; padding:0 20px">Una vez completado, puede comenzar a usar el demo y hacer las pruebas que desee.</h4>
+                    <br>
+                    <p><small style="font-weight:100; color:#424242">¿No puede ingresar el código? Pegue el siguiente enlace en su navegador:</small></p>
+                    <p><small style="font-weight:100; color:#424242; text-decoration:none">'.$url.$emails_sending['link'].$user['mail_encrypt'].'</small></p>
+                    <hr style="border:1px solid #ccc; width: 8px;0%">
+                    <h5 style="font-weight:100; color:#424242">Estás recibiendo este correo electrónico porque creaste una cuenta en AppOnlinecol. Si no fuiste tú, ignora este correo electrónico.</h5>
+                </center>
+            </div>
+        </div>
+        ';
+
+        $e_mail = new PHPMailer(true);
+        $e_mail->CharSet = "UTF-8";
+
+        try {
+            $e_mail->SMTPDebug = 2;
+            $e_mail->isSMTP();
+            $e_mail->Host = 'apponlinecol.com';
+            $e_mail->SMTPAuth = true;
+            $e_mail->Username = $template['mail'];
+            $e_mail->Password = $template['pass'];
+            $e_mail->SMTPSecure = 'ssl';
+            $e_mail->Port = 465;
+
+            $e_mail->setFrom( $template['mail'], 'AppOnlinecol' );
+            $e_mail->addAddress( $mail );
+
+            $e_mail->isHTML(true);
+            $e_mail->Subject = $emails_sending['subject'];
+            $e_mail->Body = $html;
+            $e_mail->AltBody = '';
+            /*if( $sales_web['shipping_support'] != null ){
+                $e_mail->addAttachment( str_replace('../../','../', $sales_web['shipping_support'] )) ;
+            }*/
+
+            if( $e_mail->send() ){ success_mail( $mail, $user['mail_encrypt'] ); }
+
+        } catch (Exception $e) { echo "Ocurrió un error: {$e_mail->ErrorInfo}";  }
+
+    }
+
 }
 
 
@@ -88,6 +159,12 @@ function repeated( $text ){ echo'
 <script>
     swal.fire({ title: "Registro repetido...", text:  "¡'.$text.'!", icon:  "warning", showCancelButton: false, confirmButtonText: "ok!", allowOutsideClick: false,
     }).then((result) => { if (result.value) { history.back(); } })
+</script>
+';}
+function success_mail( $mail, $mail_encrypt ){ $url = routes::ctrRout(); echo'
+<script>
+    swal.fire({ html: "¡Se envió al correo '.$mail.' el código de verificación para que finalice con el proceso de registro!", icon: "success", showCancelButton: false, confirmButtonText: "Ingresar código!", allowOutsideClick: false,
+    }).then((result) => { if (result.value) { window.location.href= "'.$url.'account-activation/'.$mail_encrypt.'" ; } })
 </script>
 ';}
 function print_pos( $dir ){ $url = routes::ctrRout(); echo'

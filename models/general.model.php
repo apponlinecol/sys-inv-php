@@ -17,18 +17,20 @@ class ModelGeneral
     static public function mdlInsertRow( $table, $header, $data )
     {
         try {
+            $conn = connections::connect();
             $fiel = []; $valu = []; foreach ($header as $row) { $fiel[] = '`' . $row . '`'; $valu[] = ':' . $row; }
             $fields = implode(',', $fiel); $values = implode(',', $valu);
-            $stmt = connections::connect()->prepare(' INSERT INTO ' . $table . ' ( ' . $fields . ' ) VALUES ( ' . $values . ' ) ');
+            $stmt = $conn->prepare(' INSERT INTO ' . $table . ' ( ' . $fields . ' ) VALUES ( ' . $values . ' ) ');
             foreach ($data as $key => $value) {
                 if (is_int($value)) { $param = PDO::PARAM_INT; }
                 else { $param = PDO::PARAM_STR; }
                 $stmt->bindValue(':' . $key, $value, $param);
             }
             $stmt->execute();
-            return 'ok';
+            $id = $conn->lastInsertId();
+            return $id;
         } catch ( Exception $e ){
-            switch ( $e->getCode() ){ case 23000: return 'repeated'; break; default: return $e->getCode(); break; }
+            switch ( $e->getCode() ){ case 23000: return 'repeated'; break; default: return $e->getMessage().'('.$e->getMessage().')'; break; }
         }
     }
     static public function mdlUpdateRow( $table, $title, $data )
