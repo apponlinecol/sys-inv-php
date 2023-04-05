@@ -115,7 +115,13 @@ class ControllerGeneral
                 $e_mail->addAttachment( str_replace('../../','../', $sales_web['shipping_support'] )) ;
             }*/
 
-            if( $e_mail->send() ){ success_mail( $mail, $user['mail_encrypt'] ); }
+            if( $e_mail->send() ){
+                switch ( $code ){
+                    case 0: success_mail( $mail, $user['mail_encrypt'] ); break;
+                    default: echo'<script> window.location.href= "'.$url.'account-activation/'.$user['mail_encrypt'].'" ; </script>'; break;
+                }
+
+            }
 
         } catch (Exception $e) { echo "Ocurrió un error: {$e_mail->ErrorInfo}";  }
 

@@ -56,12 +56,12 @@ input[type="date"]::-webkit-calendar-picker-indicator { display: none; -webkit-a
     justify-content: center;
     align-items: center;
 }
-.login-box, .login-card-body {
+.login-title {
+    font-size: 25px;
+}
+.login-box {
     width: 360px;
     border-radius: .5em;
-}
-.login-title{
-    font-size: 25px;
 }
 @media (max-width: 576px) {
     .login-box {
@@ -69,6 +69,16 @@ input[type="date"]::-webkit-calendar-picker-indicator { display: none; -webkit-a
         width: 90%;
     }
 }
+.login-card-body {
+    background: #ffffff;
+    border-top: 0;
+    color: #666;
+    padding: 20px;
+    border-radius: .5em;
+}
+.btn-entry:hover{ background-color: transparent; }
+
+
 
 /* Checkboxes styles */
 .first{

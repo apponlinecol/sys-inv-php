@@ -1,14 +1,11 @@
 <?php error_reporting(E_ALL); ini_set('display_errors', 1); $system_name = []; $system_name = explode(" ", $template["system_name"]); ?>
 
 <style>
-    .body_login, .login-box, .login-card-body, input.form-control:focus{ border-color:<?=$color?>; box-shadow: 0 0 7px <?=$color?>; }
-    input.form-control{ border-color:<?=$color?>; }
-    .login-title, .input-icon, small, i.thin{ color:<?=$color?>; }
+    .login-box, .login-card-body, input.form-control:focus{ border-color:<?=$color?>; box-shadow: 0 0 7px <?=$color?>; }
+    .login-title, .input-icon, i.thin{ color:<?=$color?>; }
     .btn-entry{ background: <?=$color?>; color: #ffffff; }
-    .btn-entry:hover{ opacity: 0.5; }
-    a, a:hover {
-        color:<?=$color?>;
-    }
+    input.form-control{ border-color:<?=$color?>; }
+    a, a:hover { color:<?=$color?>; }
 </style>
 
 
@@ -58,7 +55,7 @@
                 </form>
                 <hr>
                 <div class="d-flex ">
-                    <div class="h7 ms-auto">¿Tiene una cuenta registrada? | <a href="<?=$url?>"><b>Ingresar</b></a> </div>
+                    <div class="h7 ms-auto">¿Tiene una cuenta registrada? | <a href="<?=$url?>"><b>Iniciar sesión</b></a> </div>
                 </div>
             </div>
         </div>

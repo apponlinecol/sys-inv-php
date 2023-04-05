@@ -20,7 +20,7 @@ class ControllerUsers{
             is_numeric($response) ? $reply = 'ok' : $reply = $response;
 
             switch ( $reply ){
-                case 'ok': ControllerGeneral::ctrEmailsSending(1,$response,$code); break;
+                case 'ok': ControllerGeneral::ctrEmailsSending(1, $response, $code); break;
                 case 'repeated': repeated('El correo '.$_POST['mail'].' ya se encuentra registrado, ingrese al sistema'); break;
                 default: error('Comuníquese con nosotros para ayudarle con su registro.'); break;
             }
@@ -37,18 +37,33 @@ class ControllerUsers{
                             $reply = ModelGeneral::mdlUpdateField('users','status', [ 'id'=>$user['id'], 'set'=>1 ] );
                             switch ($reply){
                                 case 'ok':echo'<script>
-                                    swal.fire({ html: "¡Su cuenta ya se encuentra activa, ya puede ingresar al sistema y puede hacer las pruebas que desee!", icon: "success", showCancelButton: false, confirmButtonText: "ok!", allowOutsideClick: false,
+                                    swal.fire({ html: "¡Registro confirmado, su cuenta ya se encuentra activa, ya puede ingresar al sistema y puede hacer las pruebas que desee!", icon: "success", showCancelButton: false, confirmButtonText: "ok!", allowOutsideClick: false,
                                     }).then((result) => { if (result.value) { window.location.href= "'.$url.'" ; } })
                                 </script>';break;
                             }
 
                         }else{
-                            echo '<div class="alert alert-warning text-center">El <b>código</b> ingresado tiene algún error, verifique de nuevo el <b>correo</b> e ingrese el código correcto e intente de nuevo.</div>';
+                            echo '<div class="alert alert-warning text-center mt-3">El <b>código</b> ingresado tiene algún error, verifique de nuevo el <b>correo</b> e ingrese el código correcto e intente de nuevo.</div>';
                         }; break;
                     default: echo '<script> setTimeout( function() { window.location = "'.$url.'"; },1) </script>'; break;
                 }
             }else{
                 error('Se modifico algo de la url; vuelva al correo y de click en \"Abra AppOnlinecol\" o de click o copie y pegue en el navegador el \"enlace\"');
+            }
+        }
+    }
+    static public function forwarding()
+    {
+        if( isset( $_POST['mail_encrypt'] ) ) {
+            $user = ModelGeneral::mdlRecord('single','users','where mail_encrypt="'.$_POST['mail_encrypt'].'"');
+            $code =  substr(str_shuffle( '1234567890' ), 0, 8);
+
+            $reply = ModelGeneral::mdlUpdateField('users','code_encrypt', [ 'id'=>$user['id'], 'set'=>md5($code) ]);
+
+            switch ( $reply ){
+                case 'ok': ControllerGeneral::ctrEmailsSending(1, $user['id'], $code); break;
+                case 'repeated': repeated('El correo '.$_POST['mail'].' ya se encuentra registrado, ingrese al sistema'); break;
+                default: error('Comuníquese con nosotros para ayudarle con su registro.'); break;
             }
         }
     }

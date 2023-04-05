@@ -5,6 +5,13 @@ $(document).on('click', '#btnActivate', function () {
         default: toastr.error('El código no tiene los 8 dígitos completos, ingréselos todos e intentar de nuevo.'); break;
     }
 });
+$(document).on('click', '#forwardingCode', function () {
+    Swal.fire({
+        title: "Se reenviará  un nuevo código al correo",
+        html: 'Si está de acuerdo de click en <b class="">"Reenviar"</b>, en caso contrario de click en <b class="text-gray">"No, me equivoque"</b>',
+        icon: 'warning', showCancelButton: true, confirmButtonText: 'Reenviar', cancelButtonText: "No, me equivoque!",
+    }).then((result) => { if (result.value) { $("#formForwarding").submit(); } });
+});
 
 $(document).bind('paste', function() {
     $('#n1').css('color','white');
@@ -24,7 +31,6 @@ $(document).bind('paste', function() {
         }
     })
 });
-
 $('.act').keyup(function () {
     n = parseInt($(this).attr('idn'))+1;
     $('#n'+n).focus();
